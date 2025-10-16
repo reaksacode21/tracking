@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="pay.css"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4f46e5',
+                        'secondary': '#10b981',
+                        'danger': '#ef4444',
+                        'bg-light': '#f9fafb',
+                        'card-bg': '#ffffff',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+       
+    </style>
+</head>
+<body class="p-0 md:p-4">
+
+<div id="app" class="max-w-4xl mx-auto bg-bg-light min-h-screen">
+
+    <!-- Header & Navigation -->
+    <header class="bg-primary p-4 rounded-b-xl shadow-lg md:rounded-xl">
+        <h1 class="text-2xl font-bold text-white">SG Paid Angkor</h1>
+        <p class="text-primary-200 text-sm mt-1">Your Personal Financial $</p>
+
+        <div id="tabs" class="flex justify-around mt-4 bg-white p-1 rounded-lg">
+            <button class="tab-btn p-2 text-sm text-gray-700 w-full rounded-md active" data-view="dashboard">Dashboard</button>
+            <button class="tab-btn p-2 text-sm text-gray-700 w-full rounded-md" data-view="add-transaction">Add/Goal</button>
+            <button class="tab-btn p-2 text-sm text-gray-700 w-full rounded-md" data-view="reports">Reports</button>
+        </div>
+    </header>
+
+    <main class="p-4 pt-6">
+        <!-- --- DASHBOARD VIEW --- -->
+        <div id="dashboard" class="content-view">
+            <div id="balance-overview" class="data-card bg-primary text-white p-5 rounded-xl mb-6">
+                <p class="text-sm opacity-80">Current Balance</p>
+                <h2 id="current-balance" class="text-4xl font-extrabold mt-1">$0.00</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Income vs Expense Chart (Simplified) -->
+                <div class="data-card bg-card-bg p-4 rounded-xl">
+                    <h3 class="font-semibold text-lg mb-3 text-gray-800">Monthly Flow</h3>
+                    <div id="income-expense-bar" class="h-8 rounded-full flex overflow-hidden">
+                        <!-- Bars injected here -->
+                    </div>
+                    <div class="flex justify-between text-sm mt-2">
+                        <span id="monthly-income" class="text-secondary font-medium">I: $0</span>
+                        <span id="monthly-expense" class="text-danger font-medium">E: $0</span>
+                    </div>
+                </div>
+
+                <!-- Category Pie Chart (Simplified) -->
+                <div class="data-card bg-card-bg p-4 rounded-xl">
+                    <h3 class="font-semibold text-lg mb-3 text-gray-800">Top Expenses</h3>
+                    <div id="category-pie-list" class="space-y-2 text-sm">
+                        <p class="text-gray-500 text-center">No expenses recorded this month.</p>
+                        <!-- Categories injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings Goal Progress -->
+            <div id="goals-progress-container" class="data-card bg-card-bg p-4 rounded-xl mb-6">
+                <h3 class="font-semibold text-lg mb-3 text-gray-800">Savings Goals</h3>
+                <!-- Goals injected here -->
+            </div>
+
+            <!-- Analytics & Insights -->
+            <div id="insights-container" class="data-card bg-card-bg p-4 rounded-xl border-l-4 border-primary/50">
+                <h3 class="font-semibold text-lg mb-3 text-primary">Smart Insights</h3>
+                <div id="insights-list" class="space-y-2 text-sm text-gray-700">
+                    <p>Loading insights...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- ADD TRANSACTION / GOAL VIEW --- -->
+        <div id="add-transaction" class="content-view hidden">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Record Transaction</h2>
+            <div class="data-card bg-card-bg p-4 rounded-xl mb-6">
+                <form id="transaction-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Type</label>
+                        <div class="flex space-x-4 mt-1">
+                            <label class="flex items-center">
+                                <input type="radio" name="type" value="expense" checked class="text-danger focus:ring-danger">
+                                <span class="ml-2 text-danger font-medium">Expense</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="type" value="income" class="text-secondary focus:ring-secondary">
+                                <span class="ml-2 text-secondary font-medium">Income</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="amount" class="block text-sm font-medium text-gray-700">Amount ($)</label>
+                        <input type="number" id="amount" required step="0.01" min="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+
+                    <div>
+                        <label for="tag" class="block text-sm font-medium text-gray-700">Category Tag</label>
+                        <input type="text" id="tag" required placeholder="e.g. Food, Salary, Transport" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <input type="text" id="description" placeholder="Optional notes" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+
+                    <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Add Transaction
+                    </button>
+                </form>
+            </div>
+
+            <!-- Savings Goal Form -->
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Set New Goal</h2>
+            <div class="data-card bg-card-bg p-4 rounded-xl mb-6">
+                <form id="goal-form" class="space-y-4">
+                    <div>
+                        <label for="goal-name" class="block text-sm font-medium text-gray-700">Goal Name</label>
+                        <input type="text" id="goal-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                    <div>
+                        <label for="goal-target" class="block text-sm font-medium text-gray-700">Target Amount ($)</label>
+                        <input type="number" id="goal-target" required step="0.01" min="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                    <div>
+                        <label for="goal-monthly" class="block text-sm font-medium text-gray-700">Monthly Contribution ($)</label>
+                        <input type="number" id="goal-monthly" required step="0.01" min="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                    <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-secondary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">
+                        Set Goal
+                    </button>
+                </form>
+            </div>
+
+            <!-- Savings Contribution Form -->
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Add Savings Contribution</h2>
+            <div class="data-card bg-card-bg p-4 rounded-xl">
+                <form id="contribution-form" class="space-y-4">
+                    <div>
+                        <label for="contribution-goal" class="block text-sm font-medium text-gray-700">Choose Goal</label>
+                        <select id="contribution-goal" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                            <option value="" disabled selected>Select a goal...</option>
+                            <!-- Options populated by JS -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="contribution-amount" class="block text-sm font-medium text-gray-700">Amount to Save ($)</label>
+                        <input type="number" id="contribution-amount" required step="0.01" min="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                    <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Contribute to Goal
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- --- REPORTS VIEW --- -->
+        <div id="reports" class="content-view hidden">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Reports & History</h2>
+
+            <div class="flex space-x-2 mb-4">
+                <button class="report-filter-btn p-2 text-sm rounded-lg bg-primary text-white" data-period="daily">Daily</button>
+                <button class="report-filter-btn p-2 text-sm rounded-lg bg-gray-200 text-gray-700" data-period="weekly">Weekly</button>
+                <button class="report-filter-btn p-2 text-sm rounded-lg bg-gray-200 text-gray-700" data-period="monthly">Monthly</button>
+                <button class="report-filter-btn p-2 text-sm rounded-lg bg-gray-200 text-gray-700" data-period="yearly">Yearly</button>
+            </div>
+
+            <!-- Report Details Container -->
+            <div id="report-details" class="data-card bg-card-bg p-4 rounded-xl mb-6">
+                <h3 id="report-title" class="text-xl font-semibold mb-3">Daily Transactions</h3>
+                <div id="report-summary">
+                    <!-- Summary info injected here (e.g., total spent, categories) -->
+                </div>
+                <div id="report-transactions" class="mt-4 scrollable-y space-y-3">
+                    <p class="text-center text-gray-500">Select a report period to view data.</p>
+                </div>
+            </div>
+
+            <!-- Message Box (replaces alert/confirm) -->
+            <div id="message-box-container" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full">
+                    <h4 id="message-box-title" class="text-lg font-bold mb-3 text-primary">Notification</h4>
+                    <p id="message-box-text" class="mb-4 text-gray-700">Message content.</p>
+                    <div class="flex justify-end space-x-2">
+                        <button id="message-box-confirm" class="py-2 px-4 bg-primary text-white text-sm rounded-md hover:bg-primary/90 hidden">Confirm</button>
+                        <button id="message-box-ok" class="py-2 px-4 bg-primary text-white text-sm rounded-md hover:bg-primary/90">OK</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="pay.js">
+   
+</script>
+
+</body>
+</html>
